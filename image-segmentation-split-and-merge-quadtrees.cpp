@@ -147,7 +147,7 @@ bool predicateStd5(const Mat& src) {
 }
 
 //----------------------------------------------------------------------------------------------------------------------- main
-int main(int /*argc*/, char** /*argv*/)
+int main(int argc, char** argv)
 {
     //img = (Mat_<uchar>(4, 4) << 0, 0, 1, 1,
     //    1, 1, 1, 1,
@@ -165,13 +165,14 @@ int main(int /*argc*/, char** /*argv*/)
 
     cout << "-----------------------" << endl;
 
-    auto img = imread(samples::findFile("lena.jpg"), 0);
+    auto img = imread((argc > 1)? argv[1] : samples::findFile("lena.jpg"), 0);
 
     // round (down) to the nearest power of 2 .. quadtree dimension is a pow of 2.
     int exponent = log(min(img.cols, img.rows)) / log(2);
-    int s = pow(2.0, (double)exponent);
-    Rect square = Rect(0, 0, s, s);
-    img = img(square).clone();
+    const int s = pow(2.0, (double)exponent);
+    //Rect square = Rect(0, 0, s, s);
+    //img = img(square).clone();
+    cv::resize(img, img, { s, s });
 
     namedWindow("original", WINDOW_AUTOSIZE);
     imshow("original", img);
